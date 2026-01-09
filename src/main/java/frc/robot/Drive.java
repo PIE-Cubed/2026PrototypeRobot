@@ -72,7 +72,7 @@ public class Drive {
         rotatePID = new PIDController(ROTATE_P, ROTATE_I, ROTATE_D);
     }
 
-    public void teleopDrive(double forwardPower, double strafePower, double rotatePower, boolean fieldDrive) {
+    public void teleopDrive(double forwardPowerFwdPos, double strafePowerLeftPos, double rotatePowerCcwPos, boolean fieldDrive) {
         /*
          * FieldRelativeSpeeds:
          *  Positive for away from alliance wall
@@ -87,8 +87,8 @@ public class Drive {
         SwerveModuleState[] swerveModuleStates =
             swerveDriveKinematics.toSwerveModuleStates(
                 fieldDrive 
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardPower, strafePower*-1, rotatePower, new Rotation2d( getYawRadians() )) 
-                : new ChassisSpeeds(forwardPower, strafePower * -1, rotatePower)
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardPowerFwdPos, strafePowerLeftPos, rotatePowerCcwPos, new Rotation2d( getYawRadians() )) 
+                : new ChassisSpeeds(forwardPowerFwdPos, strafePowerLeftPos, rotatePowerCcwPos)
             );
 
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_WHEEL_SPEED);
