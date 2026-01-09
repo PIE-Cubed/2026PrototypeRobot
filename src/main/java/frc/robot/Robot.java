@@ -125,10 +125,10 @@ public class Robot extends TimedRobot {
     boolean fieldDrive = controls.getFieldDrive();
     boolean lockWheels = controls.getWheelLock();
 
-    double forwardPower = controls.getForwardPower();
-    double strafePower = controls.getStrafePower();
-    double rotatePower = controls.getRotatePower();
+    double forwardPowerFwdPos = controls.getForwardPowerFwdPos();
+    double strafePowerLeftPos = controls.getStrafePowerLeftPos();
+    double rotatePowerCcwPos = controls.getRotatePowerCcwPos();
 
-    drive.teleopDrive(forwardPower, strafePower, rotatePower, fieldDrive);
+    drive.teleopDrive(forwardPowerFwdPos, strafePowerLeftPos, rotatePowerCcwPos, fieldDrive);
   }
 }

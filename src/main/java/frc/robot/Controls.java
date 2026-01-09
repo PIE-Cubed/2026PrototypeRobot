@@ -15,45 +15,39 @@ public class Controls {
 
     // Zorro Controller
 
-    public double getForwardPower() {
-        // Multiplied by negative 1 because the controller gives the opposite value on the y axis then it should.
-        //double power = -1 * controller.getLeftY();
-        double power = -1 * driveController.getLeftY();
+    public double getForwardPowerFwdPos() {
+        double powerFwdPos = driveController.getLeftY();
 
-        //System.out.println(enablePrecisionDrive());
-        power = Math.pow(power, 3);
+        powerFwdPos = Math.pow(powerFwdPos, 3);
         
         if (enablePrecisionDrive()) {
-            power *= 0.231;
+            powerFwdPos *= 0.231;
         }
-        //System.out.println(power);
-        return power;
+
+        return powerFwdPos;
     }
 
-    public double getStrafePower() {
-        //double power = controller.getLeftX();
-        double power = driveController.getLeftX();
 
-        //power = Math.pow(power, 3);
+    public double getStrafePowerLeftPos() {
+        double powerRightPos = driveController.getLeftX();
 
-        // For Zorro:
-        power = Math.pow(power, 3) * -1;
+        powerRightPos = Math.pow(powerRightPos, 3);
         
         if (enablePrecisionDrive()) {
-            power *= 0.231;
+            powerRightPos *= 0.231;
         }
-        return power;
+        return powerRightPos * -1;
     }
 
-    public double getRotatePower() {
-        //double power = controller.getRightX();
-        double power = driveController.getRightX();
 
-        power = Math.pow(power, 3);
+    public double getRotatePowerCcwPos() {
+        double powerCwPos = driveController.getRightX();
 
-        //System.out.println(power);
-        return power;
+        powerCwPos = Math.pow(powerCwPos, 3);
+
+        return powerCwPos * -1;
     }
+
 
     public double getRightY() {
         return driveController.getRightY();
