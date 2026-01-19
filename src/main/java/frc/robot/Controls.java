@@ -71,16 +71,16 @@ public class Controls {
         }
     }
 
+    public boolean resetGyro() {
+        //return controller.getPOV() == 0;
+        //return driveController.getAButtonPressed() == true;
+        return driveController.getHButton() == true;
+        //return false;
+    }
+
     /*********************************************/
     /*                                           */
     /*              Xbox Controller              */
     /*                                           */
     /*********************************************/
-
-    public boolean resetGyro() {
-        //return controller.getPOV() == 0;
-        //return driveController.getAButtonPressed() == true;
-        return controller.getRightStickButtonPressed() == true;
-        //return false;
-    }
 }
