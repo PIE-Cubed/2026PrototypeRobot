@@ -30,6 +30,11 @@ public class SwerveModule {
     private SparkBaseConfig rotateMotorConfig;
 
     // Setting constant variables
+
+    /*  Rev suggested current limits
+         NEO Vortex        80 Amp
+         NEO          40 - 60 Amp
+         NEO 550      20 - 40 Amp  */
     public final int DRIVE_MOTOR_CURRENT_LIMIT = 65;
     private final int ROTATE_MOTOR_CURRENT_LIMIT = 40;
 
