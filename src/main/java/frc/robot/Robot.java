@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.Arrays;
+import java.util.List;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -58,7 +61,8 @@ public class Robot extends TimedRobot {
     controls = new Controls();
     drive = new Drive();
 
-    // System.out.println(FieldConstants.aprilTagLayout);
+    System.out.println("April Tags list");
+    System.out.println(Arrays.toString(FieldConstants.aprilTagLayout.getTags().toArray()));
   }
 
   /**

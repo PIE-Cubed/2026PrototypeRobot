@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -23,14 +22,6 @@ public class Constants {
             Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", aprilTagJson + ".json");
 
         public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
-
-        static {
-            try {
-                aprilTagLayout = new AprilTagFieldLayout(aprilTagJsonPath);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
         public static final Pose2d hubBlueAlliance = new Pose2d(4.625594, 4.03479, Rotation2d.kZero);
         public static final Pose2d hubRedAlliance = new Pose2d(11.915394, 4.03479, Rotation2d.kZero);
