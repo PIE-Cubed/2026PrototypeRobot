@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.util.AllianceUtil;
 
 /**
@@ -56,6 +57,8 @@ public class Robot extends TimedRobot {
 
     controls = new Controls();
     drive = new Drive();
+
+    // System.out.println(FieldConstants.aprilTagLayout);
   }
 
   /**
@@ -67,19 +70,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putNumber("Voltage", pdh.getVoltage());
+    // SmartDashboard.putNumber("Voltage", pdh.getVoltage());
 
     // TODO: Add Odometry
+    // Odometry and Pose
     field2d.setRobotPose(new Pose2d(0, 0, new Rotation2d(0)));
-
     SmartDashboard.putData("Field", field2d);
 
-    // TODO: Make this not stupid
-    double time = AllianceUtil.getMatchTime();
-
-    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
-    SmartDashboard.putNumber("Time Until Shift", AllianceUtil.timeUntilShift(time));
-    SmartDashboard.putBoolean("Hub Active", AllianceUtil.isOurShift(AllianceUtil.getShift(time)));
+    // Match Time and Hub State
+    double matchTime = DriverStation.getMatchTime();
+    SmartDashboard.putNumber("Match Time", matchTime);
+    SmartDashboard.putNumber("Time Until Shift", AllianceUtil.timeUntilHubStateChange(matchTime));
+    SmartDashboard.putBoolean("Hub Active", AllianceUtil.isOurHubActive(matchTime));
   }
 
   /**
