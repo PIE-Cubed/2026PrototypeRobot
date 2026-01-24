@@ -44,8 +44,8 @@ public class Robot extends TimedRobot {
   private final Field2d field2d = new Field2d();
 
   private Controls controls;
-  private Drive drive;
-
+  private Drive    drive;
+  private Shooter  shooter;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -59,11 +59,16 @@ public class Robot extends TimedRobot {
     pdh = new PowerDistribution(1, ModuleType.kRev);
 
     controls = new Controls();
-    drive = new Drive();
+    drive    = new Drive();
+    shooter  = new Shooter();
 
     System.out.println("April Tags list");
     System.out.println(Arrays.toString(FieldConstants.aprilTagLayout.getTags().toArray()));
+    
+    SmartDashboard.putNumber("Motor velocity", 0.0);
+
   }
+
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -143,7 +148,16 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() 
+  {
+    double velocity;
+
+
+    
+   velocity = SmartDashboard.getNumber("Motor velocity", 0);
+    shooter.setVelocity(velocity);
+
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

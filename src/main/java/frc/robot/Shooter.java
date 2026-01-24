@@ -9,7 +9,12 @@ import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Voltage;
+
+
+
 
 public class Shooter {
     private SparkFlex       topMotor;
@@ -29,13 +34,18 @@ public class Shooter {
     private final int BOTTOM_MOTOR_ID = 20;
 
     // PID Values
-    private final double TOP_P = 0.01;
+    private final double TOP_P = 0.0055;
     private final double TOP_I = 0.0;
     private final double TOP_D = 0.0;
 
-    private final double BOTTOM_P = 0.01;
+    private final double BOTTOM_P = 0.0055;
     private final double BOTTOM_I = 0.0;
     private final double BOTTOM_D = 0.0;
+
+
+    // top motor runs slower than bottom motor for backspin
+    private static final double SHOOTER_MOTOR_DELTA = .1;
+    private static final double VELOCITY_TO_VOLT_RATIO = 550;
 
     public Shooter() {
         topMotor       = new SparkFlex(TOP_MOTOR_ID, MotorType.kBrushless);
@@ -99,4 +109,78 @@ public class Shooter {
     public void setBottomTargetSpeed(double speed) {
 
     }
+    
+    
+    
+    public void setVelocity(double velocity){
+        double voltage;
+        double pidOutput;
+
+        voltage = velocity/VELOCITY_TO_VOLT_RATIO;
+        
+        pidOutput = bottomPIDController.calculate(bottomMotorEncoder.getVelocity(), velocity);
+        voltage = voltage + pidOutput;
+
+        voltage = MathUtil.clamp(voltage, -12.0, 12.0);
+        bottomMotor.setVoltage(voltage);
+        if (voltage >= 0.0) {
+            topMotor.setVoltage(voltage - SHOOTER_MOTOR_DELTA);
+        } 
+        else {
+            topMotor.setVoltage(voltage + SHOOTER_MOTOR_DELTA);
+        }
+System.out.println("velocity" + bottomMotorEncoder.getVelocity());
+
+
+
+    }
+
+
+
+    /******************************************************************************************************
+     * 
+     * TEST PROGRAMS
+     * 
+     ******************************************************************************************************/
+        /* FOR MOTOR SET FUCNTION
+         .1 volts = 606 RPM
+         * .2 volts = 1240 RPM
+         * .3 volts = 1866 RPM
+         * .4 volts = 2500 RPM
+         * .5 volts = 3140 RPM
+         * .6 volts = 3783 RPM
+         * .7 volts =  4408 RPM
+         * .8 volts =  5012 RPM
+         * .9 volts = 5600 RPM
+         * 1 volts =  6175 RPM
+         * 
+         * MOTORSETVOLTAGE (More Stable than SET FUNCTOIN)
+         * volts  RPM    Delta   RPM/Volts
+         * 1      527            527
+         * 2      1085   558     542.5
+         * 3      1642   560     547.3
+         * 4      2201   559     550.25
+         * 5      2761   560     552.2
+         * 6      3322   561     553.67
+         * 7      3884   562     554.85
+         * 8      4446   562     555.75
+         * 9      5006   560     556.22
+         * 10     5550   544     555
+         * 11     6090   540     553.64
+         * MAX 12 6155   065     512.92
+    
+         */
+     public void testVoltageVsVelocity(double voltage)
+    {
+        double velocity;
+
+
+
+        //bottomMotor.set(voltage);        
+        bottomMotor.setVoltage(voltage);
+        velocity = bottomMotorEncoder.getVelocity();
+        System.out.println("velocity = " + velocity + "    " + voltage);
+    
+    } 
+
 }
