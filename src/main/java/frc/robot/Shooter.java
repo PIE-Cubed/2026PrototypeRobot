@@ -42,6 +42,9 @@ public class Shooter {
     private final double BOTTOM_I = 0.0;
     private final double BOTTOM_D = 0.0;
 
+    private double prevShooterVelocity = 0;
+    private double prevShooterVoltage  = 0;
+
 
     // top motor runs slower than bottom motor for backspin
     private static final double SHOOTER_MOTOR_DELTA = .1;
@@ -112,11 +115,17 @@ public class Shooter {
     
     
     
-    public void setVelocity(double velocity){
+    public void setVelocity(double velocity)  {
         double voltage;
         double pidOutput;
+    
 
-        voltage = velocity/VELOCITY_TO_VOLT_RATIO;
+        if (velocity == prevShooterVelocity){
+            voltage = prevShooterVoltage;
+        }
+        else {
+            voltage = velocity/VELOCITY_TO_VOLT_RATIO;
+        }
         
         pidOutput = bottomPIDController.calculate(bottomMotorEncoder.getVelocity(), velocity);
         voltage = voltage + pidOutput;
@@ -128,11 +137,11 @@ public class Shooter {
         } 
         else {
             topMotor.setVoltage(voltage + SHOOTER_MOTOR_DELTA);
-        }
-System.out.println("velocity" + bottomMotorEncoder.getVelocity());
-
-
-
+        }    
+         
+        prevShooterVoltage  = voltage;
+        prevShooterVelocity = velocity;
+        System.out.println("velocity" + bottomMotorEncoder.getVelocity());
     }
 
 
