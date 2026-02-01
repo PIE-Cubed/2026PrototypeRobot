@@ -164,6 +164,8 @@ public class Robot extends TimedRobot {
 
     climber.testMotor(climbUp, climbDown);
 
+    wheelControl();
+
   }
 
   /** This function is called once when the robot is first started up. */
