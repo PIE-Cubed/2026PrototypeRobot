@@ -78,9 +78,27 @@ public class Controls {
         //return false;
     }
 
+    public boolean getClimberUp() {
+        return driveController.getDButtonPressed();
+    }
+
+    public boolean getClimberDown() {
+        return driveController.getAButtonPressed();
+    }
+
     /*********************************************/
     /*                                           */
     /*              Xbox Controller              */
     /*                                           */
     /*********************************************/
+
+    // TODO: make this use voltage
+    public double getClimberUpPower() {
+        return controller.getLeftTriggerAxis();
+    }
+
+    public double getClimberDownPower() {
+        // because it is down, we must negate this value
+        return -controller.getRightTriggerAxis();
+    }
 }

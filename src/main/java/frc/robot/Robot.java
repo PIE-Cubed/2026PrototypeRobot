@@ -46,6 +46,7 @@ public class Robot extends TimedRobot {
   private Controls controls;
   private Drive    drive;
   private Shooter  shooter;
+  private Climber climber;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -61,6 +62,7 @@ public class Robot extends TimedRobot {
     controls = new Controls();
     drive    = new Drive();
     shooter  = new Shooter();
+    climber  = new Climber();
 
     System.out.println("April Tags list");
     System.out.println(Arrays.toString(FieldConstants.aprilTagLayout.getTags().toArray()));
@@ -150,12 +152,17 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() 
   {
-    double velocity;
+//     double velocity;
 
 
     
-   velocity = SmartDashboard.getNumber("Motor velocity", 0);
-    shooter.setVelocity(velocity);
+//    velocity = SmartDashboard.getNumber("Motor velocity", 0);
+//     shooter.setVelocity(velocity);
+
+    double climbUp = controls.getClimberUpPower();
+    double climbDown = controls.getClimberDownPower();
+
+    climber.testMotor(climbUp, climbDown);
 
   }
 
