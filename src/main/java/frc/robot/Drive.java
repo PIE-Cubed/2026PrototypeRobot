@@ -35,10 +35,22 @@ public class Drive {
 
     public static final double SWERVE_DIST_FROM_CENTER = 0.3254375;
     public static final Translation2d centerLocation = new Translation2d(0, 0);
-    public static final Translation2d frontLeftLocation = new Translation2d(SWERVE_DIST_FROM_CENTER, SWERVE_DIST_FROM_CENTER);
-    public static final Translation2d frontRightLocation = new Translation2d(SWERVE_DIST_FROM_CENTER, -SWERVE_DIST_FROM_CENTER);
-    public static final Translation2d backLeftLocation = new Translation2d(-SWERVE_DIST_FROM_CENTER, SWERVE_DIST_FROM_CENTER);
-    public static final Translation2d backRightLocation = new Translation2d(-SWERVE_DIST_FROM_CENTER, -SWERVE_DIST_FROM_CENTER);
+    public static final Translation2d frontLeftLocation = new Translation2d(
+        SWERVE_DIST_FROM_CENTER,
+        SWERVE_DIST_FROM_CENTER
+    );
+    public static final Translation2d frontRightLocation = new Translation2d(
+        SWERVE_DIST_FROM_CENTER,
+        -SWERVE_DIST_FROM_CENTER
+    );
+    public static final Translation2d backLeftLocation = new Translation2d(
+        -SWERVE_DIST_FROM_CENTER,
+        SWERVE_DIST_FROM_CENTER
+    );
+    public static final Translation2d backRightLocation = new Translation2d(
+        -SWERVE_DIST_FROM_CENTER,
+        -SWERVE_DIST_FROM_CENTER
+    );
 
     public SwerveDriveKinematics swerveDriveKinematics;
 
@@ -130,7 +142,12 @@ public class Drive {
 
         ahrs.zeroYaw();
 
-        swerveDriveKinematics = new SwerveDriveKinematics(frontLeftLocation, frontRightLocation, backLeftLocation, backRightLocation);
+        swerveDriveKinematics = new SwerveDriveKinematics(
+            frontLeftLocation,
+            frontRightLocation,
+            backLeftLocation,
+            backRightLocation
+        );
 
         frontLeft = new SwerveModule(14, 15, true);
         frontRight = new SwerveModule(16, 17, false);
@@ -186,7 +203,12 @@ public class Drive {
         timer.restart();
     }
 
-    public void teleopDrive(double forwardPowerFwdPos, double strafePowerLeftPos, double rotatePowerCcwPos, boolean fieldDrive) {
+    public void teleopDrive(
+        double forwardPowerFwdPos,
+        double strafePowerLeftPos,
+        double rotatePowerCcwPos,
+        boolean fieldDrive
+    ) {
         /*
          * FieldRelativeSpeeds:
          *  Positive for away from alliance wall
@@ -246,7 +268,12 @@ public class Drive {
 
         SwerveModuleState[] swerveModuleStates = swerveDriveKinematics.toSwerveModuleStates(
             fieldDrive
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(forwardPower, strafePower, rotatePower, new Rotation2d(getYawRadians()))
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                    forwardPower,
+                    strafePower,
+                    rotatePower,
+                    new Rotation2d(getYawRadians())
+                )
                 : new ChassisSpeeds(forwardPower, strafePower, rotatePower),
             centerOfRotation
         );
@@ -266,7 +293,13 @@ public class Drive {
      * @param fieldDrive Whether to drive with field relative speeds
      * @param isRedAlliance Whether the robot is on the red alliance or not. Set to false if using for autonomous. (if true, changes robot rotation by 180 degrees so it is facing the other way)
      */
-    public void velocityDrive(double forwardMPS, double strafeMPS, double rotateDPS, boolean fieldDrive, boolean isRedAlliance) {
+    public void velocityDrive(
+        double forwardMPS,
+        double strafeMPS,
+        double rotateDPS,
+        boolean fieldDrive,
+        boolean isRedAlliance
+    ) {
         /*
          * FieldRelativeSpeeds:
          *  Positive for away from your alliance wall
@@ -349,7 +382,14 @@ public class Drive {
             // }
 
             // used to be unlimited constraints HOWEVER PathPlanner apparently sets all the max values EXTREMELY low for safety
-            PathConstraints constraints = new PathConstraints(2, 2.5, Units.degreesToRadians(270), Units.degreesToRadians(270), 12, false);
+            PathConstraints constraints = new PathConstraints(
+                2,
+                2.5,
+                Units.degreesToRadians(270),
+                Units.degreesToRadians(270),
+                12,
+                false
+            );
 
             otfPath = new PathPlannerPath(
                 waypoints,
@@ -446,6 +486,10 @@ public class Drive {
 
     public double getYawRadians() {
         return MathUtil.angleModulus(-Units.degreesToRadians(ahrs.getYaw()));
+    }
+
+    public double getYawDegrees() {
+        return Math.toDegrees(getYawRadians());
     }
 
     public void stopWheels() {
