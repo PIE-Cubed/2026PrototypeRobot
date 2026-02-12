@@ -115,13 +115,19 @@ public class Odometry {
                     (drive.getYawRateDegrees() <= MAX_YAW_RATE_DEGREES)
                 ) {
                     camera1RobotPose = camera1PoseEstimator.update(newResult).get(); // Grab estimated Pose3d from camera
+                } else {
+                    camera1RobotPose = null;
                 }
+            } else {
+                camera1RobotPose = null;
             }
+        } else {
+            camera1RobotPose = null;
         }
 
         camera2Results = camera2.getAllUnreadResults();
 
-        if (camera2Results == null) { // man idk
+        if (camera2Results == null) {
             return;
         }
 
@@ -137,8 +143,14 @@ public class Odometry {
                     (drive.getYawRateDegrees() <= MAX_YAW_RATE_DEGREES)
                 ) {
                     camera2RobotPose = camera2PoseEstimator.update(newResult).get(); // Grab estimated Pose3d from camera
+                } else {
+                    camera2RobotPose = null;
                 }
+            } else {
+                camera2RobotPose = null;
             }
+        } else {
+            camera2RobotPose = null;
         }
         /*
         camera3Results = camera3.getAllUnreadResults();
@@ -196,11 +208,11 @@ public class Odometry {
         */
     }
 
-    public static List<Matrix<N3, N3>> getAllStdDevs() {
+    public List<Matrix<N3, N3>> getAllStdDevs() {
         return List.of(
-            camera1.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3)))
-            // camera2.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3))),
-            // camera3.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3))),
+            camera1.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3))),
+            camera2.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3)))
+            // camera3.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3)))
             // camera4.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3)))
         );
     }

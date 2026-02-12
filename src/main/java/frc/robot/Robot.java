@@ -47,6 +47,7 @@ public class Robot extends TimedRobot {
     private Drive drive;
     private Shooter shooter;
     private Climber climber;
+    private Odometry odometry;
 
     /**
      * This function is run when the robot is first started up and should be used for any
@@ -63,12 +64,8 @@ public class Robot extends TimedRobot {
         controls = new Controls();
         drive = new Drive();
         shooter = new Shooter();
-        climber = new Climber();
-
-        System.out.println("April Tags list");
-        System.out.println(Arrays.toString(FieldConstants.aprilTagLayout.getTags().toArray()));
-
-        SmartDashboard.putNumber("Motor velocity", 0.0);
+        // climber = new Climber();
+        odometry = new Odometry(drive);
     }
 
     /**
@@ -82,9 +79,20 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         // SmartDashboard.putNumber("Voltage", pdh.getVoltage());
 
-        // TODO: Add Odometry
         // Odometry and Pose
-        field2d.setRobotPose(new Pose2d(0, 0, new Rotation2d(0)));
+        odometry.updateVisionEstimators();
+
+        drive.updatePoseEstimator();
+
+        if (odometry.getCamera1Pose() == null) {
+            drive.addVisionMeasurement(odometry.getCamera1Pose(), odometry.getAllStdDevs().get(0));
+        }
+
+        if (odometry.getCamera2Pose() == null) {
+            drive.addVisionMeasurement(odometry.getCamera2Pose(), odometry.getAllStdDevs().get(1));
+        }
+
+        field2d.setRobotPose(Drive.getPose());
         SmartDashboard.putData("Field", field2d);
 
         // Match Time and Hub State
