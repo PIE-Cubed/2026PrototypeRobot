@@ -8,19 +8,16 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Voltage;
 
-
-
-
 public class Shooter {
-    private SparkFlex       topMotor;
+
+    private SparkFlex topMotor;
     private SparkBaseConfig topMotorConfig;
 
-    private SparkFlex       bottomMotor;
+    private SparkFlex bottomMotor;
     private SparkBaseConfig bottomMotorConfig;
 
     private RelativeEncoder topMotorEncoder;
@@ -43,18 +40,17 @@ public class Shooter {
     private final double BOTTOM_D = 0.0;
 
     private double prevShooterVelocity = 0;
-    private double prevShooterVoltage  = 0;
-
+    private double prevShooterVoltage = 0;
 
     // top motor runs slower than bottom motor for backspin
     private static final double SHOOTER_MOTOR_DELTA = .1;
     private static final double VELOCITY_TO_VOLT_RATIO = 550;
 
     public Shooter() {
-        topMotor       = new SparkFlex(TOP_MOTOR_ID, MotorType.kBrushless);
+        topMotor = new SparkFlex(TOP_MOTOR_ID, MotorType.kBrushless);
         topMotorConfig = new SparkFlexConfig();
 
-        bottomMotor       = new SparkFlex(BOTTOM_MOTOR_ID, MotorType.kBrushless);
+        bottomMotor = new SparkFlex(BOTTOM_MOTOR_ID, MotorType.kBrushless);
         bottomMotorConfig = new SparkFlexConfig();
 
         // TODO invert motor if needed
@@ -64,18 +60,14 @@ public class Shooter {
         bottomMotorConfig.idleMode(IdleMode.kCoast);
         bottomMotorConfig.inverted(false);
 
-        topMotor.configure(topMotorConfig, 
-                           ResetMode.kNoResetSafeParameters, 
-                           PersistMode.kPersistParameters);
+        topMotor.configure(topMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-        bottomMotor.configure(bottomMotorConfig, 
-                              ResetMode.kNoResetSafeParameters, 
-                              PersistMode.kPersistParameters);
+        bottomMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-        topMotorEncoder =    topMotor.getEncoder();
+        topMotorEncoder = topMotor.getEncoder();
         bottomMotorEncoder = bottomMotor.getEncoder();
 
-        topPIDController =    new PIDController(TOP_P, TOP_I, TOP_D);
+        topPIDController = new PIDController(TOP_P, TOP_I, TOP_D);
         bottomPIDController = new PIDController(BOTTOM_P, BOTTOM_I, BOTTOM_D);
     }
 
@@ -100,33 +92,25 @@ public class Shooter {
      * @param speed
      */
     // TODO get conversion factor for speed
-    public void setTopTargetSpeed(double speed) {
-        
-    }
+    public void setTopTargetSpeed(double speed) {}
 
     /**
      * speed ....
      * @param speed
      */
     // TODO get conversion factor for speed
-    public void setBottomTargetSpeed(double speed) {
+    public void setBottomTargetSpeed(double speed) {}
 
-    }
-    
-    
-    
-    public void setVelocity(double velocity)  {
+    public void setVelocity(double velocity) {
         double voltage;
         double pidOutput;
-    
 
-        if (velocity == prevShooterVelocity){
+        if (velocity == prevShooterVelocity) {
             voltage = prevShooterVoltage;
+        } else {
+            voltage = velocity / VELOCITY_TO_VOLT_RATIO;
         }
-        else {
-            voltage = velocity/VELOCITY_TO_VOLT_RATIO;
-        }
-        
+
         pidOutput = bottomPIDController.calculate(bottomMotorEncoder.getVelocity(), velocity);
         voltage = voltage + pidOutput;
 
@@ -134,24 +118,21 @@ public class Shooter {
         bottomMotor.setVoltage(voltage);
         if (voltage >= 0.0) {
             topMotor.setVoltage(voltage - SHOOTER_MOTOR_DELTA);
-        } 
-        else {
+        } else {
             topMotor.setVoltage(voltage + SHOOTER_MOTOR_DELTA);
-        }    
-         
-        prevShooterVoltage  = voltage;
+        }
+
+        prevShooterVoltage = voltage;
         prevShooterVelocity = velocity;
         System.out.println("velocity" + bottomMotorEncoder.getVelocity());
     }
 
-
-
     /******************************************************************************************************
-     * 
+     *
      * TEST PROGRAMS
-     * 
+     *
      ******************************************************************************************************/
-        /* FOR MOTOR SET FUCNTION
+    /* FOR MOTOR SET FUCNTION
          .1 volts = 606 RPM
          * .2 volts = 1240 RPM
          * .3 volts = 1866 RPM
@@ -179,17 +160,12 @@ public class Shooter {
          * MAX 12 6155   065     512.92
     
          */
-     public void testVoltageVsVelocity(double voltage)
-    {
+    public void testVoltageVsVelocity(double voltage) {
         double velocity;
 
-
-
-        //bottomMotor.set(voltage);        
+        //bottomMotor.set(voltage);
         bottomMotor.setVoltage(voltage);
         velocity = bottomMotorEncoder.getVelocity();
         System.out.println("velocity = " + velocity + "    " + voltage);
-    
-    } 
-
+    }
 }

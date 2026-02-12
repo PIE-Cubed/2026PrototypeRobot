@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import java.util.Optional;
 
-
 /**
  * REBUILT hub activation helper.
  *
@@ -13,6 +12,7 @@ import java.util.Optional;
  * - Teleop: counts down from ~140 to 0
  */
 public final class AllianceUtil {
+
     // Prevent construction
     private AllianceUtil() {}
 
@@ -22,12 +22,12 @@ public final class AllianceUtil {
     private static final double ENDGAME_SECONDS = 30.0;
 
     // Four 25-second alternating windows during teleop
-    private static final double[] WINDOW_STARTS = {130.0, 105.0, 80.0, 55.0};
-    private static final double[] WINDOW_ENDS   = {105.0, 80.0 , 55.0, 30.0};
+    private static final double[] WINDOW_STARTS = { 130.0, 105.0, 80.0, 55.0 };
+    private static final double[] WINDOW_ENDS = { 105.0, 80.0, 55.0, 30.0 };
 
     /**
      * Checks if we are the red alliance
-     * 
+     *
      * @return isRedAlliance
      */
     public static boolean isRedAlliance() {
@@ -37,7 +37,7 @@ public final class AllianceUtil {
 
     /**
      * Seconds until hub availability changes.
-     * 
+     *
      * @param matchTime
      * @return
      */
@@ -54,7 +54,7 @@ public final class AllianceUtil {
 
     /**
      * True if OUR alliance hub is currently active.
-     * 
+     *
      * @param matchTime
      * @return
      */
@@ -83,9 +83,7 @@ public final class AllianceUtil {
         char firstDeactivated = gameData.charAt(0);
 
         // Window 0: opposite alliance active first, then alternate
-        char activeAlliance = (windowIndex % 2 == 0)
-                ? oppositeAllianceChar(firstDeactivated)
-                : firstDeactivated;
+        char activeAlliance = (windowIndex % 2 == 0) ? oppositeAllianceChar(firstDeactivated) : firstDeactivated;
 
         boolean isRed = isRedAlliance();
         return (activeAlliance == 'R') == isRed;
@@ -93,9 +91,7 @@ public final class AllianceUtil {
 
     private static boolean isGuaranteedBothActive(double matchTime) {
         // First 10 seconds of teleop: (140, 130]
-        boolean first10 = 
-            matchTime <= TELEOP_LENGTH &&
-            matchTime > (TELEOP_LENGTH - TELEOP_START_SECONDS);
+        boolean first10 = matchTime <= TELEOP_LENGTH && matchTime > (TELEOP_LENGTH - TELEOP_START_SECONDS);
 
         // Endgame: [30,0]
         boolean endgame = matchTime <= ENDGAME_SECONDS;
@@ -105,7 +101,7 @@ public final class AllianceUtil {
 
     /**
      * Returns 0 to 3 for the current alternating window, otherwise -1.
-     * 
+     *
      * @param matchTime
      * @return
      */
@@ -121,7 +117,7 @@ public final class AllianceUtil {
 
     /**
      * Gets the character of the opposite alliance
-     * 
+     *
      * @param allianceChar
      * @return
      */

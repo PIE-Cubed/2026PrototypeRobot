@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import java.nio.file.Path;
-
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,15 +11,23 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.Filesystem;
+import java.nio.file.Path;
 
 /** Add your docs here. */
 public class Constants {
-    public static class FieldConstants {
-        public static final String aprilTagJson = "2026-rebuilt-welded";
-        public static final Path aprilTagJsonPath =
-            Path.of(Filesystem.getDeployDirectory().getPath(), "apriltags", aprilTagJson + ".json");
 
-        public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
+    public static class FieldConstants {
+
+        public static final String aprilTagJson = "2026-rebuilt-welded";
+        public static final Path aprilTagJsonPath = Path.of(
+            Filesystem.getDeployDirectory().getPath(),
+            "apriltags",
+            aprilTagJson + ".json"
+        );
+
+        public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(
+            AprilTagFields.k2026RebuiltWelded
+        );
 
         public static final Pose2d hubBlueAlliance = new Pose2d(4.625594, 4.03479, Rotation2d.kZero);
         public static final Pose2d hubRedAlliance = new Pose2d(11.915394, 4.03479, Rotation2d.kZero);

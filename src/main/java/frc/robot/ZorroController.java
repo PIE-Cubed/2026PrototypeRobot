@@ -1,4 +1,3 @@
-
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -15,9 +14,7 @@ public class ZorroController extends GenericHID {
     private Joystick zorroController;*/
 
     public ZorroController(final int zorroPort) {
-        
         super(zorroPort);
-        
         //HAL.report(tResourceType.kResourceType_XboxController, port + 1);
 
         /*zorroPort = getZorroPort();
@@ -70,10 +67,9 @@ public class ZorroController extends GenericHID {
             //If statement probably doesn't need to be there:
             if (name.endsWith("Dial")) {
                 return name + "Axis";
-            } 
+            }
             return name;
         }
-
     }
 
     // Zorro buttons
@@ -84,7 +80,7 @@ public class ZorroController extends GenericHID {
         kH(4),
         kEUp(5),
         kEDown(4),
-       // kFUp(12),
+        // kFUp(12),
         kFUp(12),
         kFDown(13),
         kBUp(3),
@@ -105,12 +101,11 @@ public class ZorroController extends GenericHID {
             var name = this.name().substring(1);
             if (name.endsWith("Up") || name.endsWith("Mid") || name.endsWith("Down")) {
                 return name;
-            } 
+            }
             return name + "Button";
         }
-
     }
-    
+
     /*public static int ZorroLeftXAxis = 0;
     public static int ZorroLeftYAxis = 1;
 
@@ -165,7 +160,6 @@ public class ZorroController extends GenericHID {
         return getRawAxis(Axis.kRightDial.value);
     }*/
 
-
     // A Button
     public boolean getAButton() {
         return getRawButton(Button.kA.value);
@@ -183,7 +177,6 @@ public class ZorroController extends GenericHID {
     public BooleanEvent a(EventLoop loop) {
         return new BooleanEvent(loop, this::getAButton);
     }
-
 
     // D Button
     public boolean getDButton() {
@@ -203,7 +196,6 @@ public class ZorroController extends GenericHID {
         return new BooleanEvent(loop, this::getDButton);
     }
 
-
     // G Button
     public boolean getGButton() {
         return getRawButton(Button.kG.value);
@@ -221,7 +213,6 @@ public class ZorroController extends GenericHID {
     public BooleanEvent g(EventLoop loop) {
         return new BooleanEvent(loop, this::getGButton);
     }
-
 
     // H Button
     public boolean getHButton() {
@@ -241,7 +232,6 @@ public class ZorroController extends GenericHID {
         return new BooleanEvent(loop, this::getHButton);
     }
 
-
     // E switch/axis
     // Up = 1, Down = -1
     public boolean getETwoPosSwitch() {
@@ -260,13 +250,11 @@ public class ZorroController extends GenericHID {
         return true;
     }
 
-
     // B tri-state switch/axis
     // Up = (1), Down = (-1), Center = (0)
     public double getBThreePosSwitch() {
         return getRawAxis(Axis.kB.value);
     }
-
 
     // C tri-state switch/axis
     // Up = (1), Down = (-1), Center = (0)

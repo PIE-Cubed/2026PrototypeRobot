@@ -4,8 +4,6 @@
 
 package frc.robot.util;
 
-import java.util.HashMap;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,11 +14,13 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructPublisher;
+import java.util.HashMap;
 
 /**
  * A homebrew logging class designed to be as barebones as possible.
  */
 public class Logger {
+
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private static NetworkTable table = instance.getTable("logs");
     private static HashMap<String, NetworkTableEntry> publishedEntries = new HashMap<>(0);
@@ -35,9 +35,9 @@ public class Logger {
 
     /**
      * <p> Logs any standard Java variable (String, int, boolean, etc) to NetworkTables. Use logStruct() for anything else.
-     * <p> If WPILib fails to parse the passed object, the thrown IllegalArgumentException is caught 
+     * <p> If WPILib fails to parse the passed object, the thrown IllegalArgumentException is caught
      *     and an error message is printed to the terminal rather than crashing code.
-     *     If the type of object being logged is different than the object previously 
+     *     If the type of object being logged is different than the object previously
      *     logged under the same name, it will fail to log and print an error message.
      * @param name A name to be assigned to the logged object.
      * @param object The object to be logged.
@@ -48,24 +48,35 @@ public class Logger {
                 try {
                     boolean good = publishedEntries.get(name).setValue(object);
                     if (!good) {
-                        System.err.println("ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" + name + "\"");
+                        System.err.println(
+                            "ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" +
+                            name +
+                            "\""
+                        );
                     }
-                } 
-                catch (IllegalArgumentException e) {
-                    System.err.println("ERROR 400: Caught IllegalArgumentException while trying to log object with type " + object.getClass().getCanonicalName());
+                } catch (IllegalArgumentException e) {
+                    System.err.println(
+                        "ERROR 400: Caught IllegalArgumentException while trying to log object with type " +
+                        object.getClass().getCanonicalName()
+                    );
                     return;
                 }
-            }
-            else {
+            } else {
                 NetworkTableEntry entry = table.getEntry(name);
                 try {
                     boolean good = entry.setValue(object);
                     if (!good) {
-                        System.err.println("ERROR 409: Type of object to be logged conflicts with type of previously logged object with same name \"" + name + "\"");
+                        System.err.println(
+                            "ERROR 409: Type of object to be logged conflicts with type of previously logged object with same name \"" +
+                            name +
+                            "\""
+                        );
                     }
-                } 
-                catch (IllegalArgumentException e) {
-                    System.err.println("ERROR 400: Caught IllegalArgumentException while trying to log object with type " + object.getClass().getCanonicalName());
+                } catch (IllegalArgumentException e) {
+                    System.err.println(
+                        "ERROR 400: Caught IllegalArgumentException while trying to log object with type " +
+                        object.getClass().getCanonicalName()
+                    );
                     return;
                 }
                 publishedEntries.put(name, entry);
@@ -75,9 +86,9 @@ public class Logger {
 
     /**
      * <p> Logs any standard Java variable (String, int, boolean, etc) to NetworkTables. Use logStruct() for anything else.
-     * <p> If WPILib fails to parse the passed object, the thrown IllegalArgumentException is caught 
+     * <p> If WPILib fails to parse the passed object, the thrown IllegalArgumentException is caught
      *     and an error message is printed to the terminal rather than crashing code.
-     *     If the type of object being logged is different than the object previously 
+     *     If the type of object being logged is different than the object previously
      *     logged under the same name, it will fail to log and print an error message.
      * @param name A name to be assigned to the logged object.
      * @param object The object to be logged.
@@ -89,24 +100,35 @@ public class Logger {
                 try {
                     boolean good = publishedEntries.get(name).setValue(object);
                     if (!good) {
-                        System.err.println("ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" + name + "\"");
+                        System.err.println(
+                            "ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" +
+                            name +
+                            "\""
+                        );
                     }
-                } 
-                catch (IllegalArgumentException e) {
-                    System.err.println("ERROR 400: Caught IllegalArgumentException while trying to log object with type " + object.getClass().getCanonicalName());
+                } catch (IllegalArgumentException e) {
+                    System.err.println(
+                        "ERROR 400: Caught IllegalArgumentException while trying to log object with type " +
+                        object.getClass().getCanonicalName()
+                    );
                     return;
                 }
-            }
-            else {
+            } else {
                 NetworkTableEntry entry = instance.getTable(tableName).getEntry(name);
                 try {
                     boolean good = entry.setValue(object);
                     if (!good) {
-                        System.err.println("ERROR 409: Type of object to be logged conflicts with type of previously logged object with same name \"" + name + "\"");
+                        System.err.println(
+                            "ERROR 409: Type of object to be logged conflicts with type of previously logged object with same name \"" +
+                            name +
+                            "\""
+                        );
                     }
-                } 
-                catch (IllegalArgumentException e) {
-                    System.err.println("ERROR 400: Caught IllegalArgumentException while trying to log object with type " + object.getClass().getCanonicalName());
+                } catch (IllegalArgumentException e) {
+                    System.err.println(
+                        "ERROR 400: Caught IllegalArgumentException while trying to log object with type " +
+                        object.getClass().getCanonicalName()
+                    );
                     return;
                 }
                 publishedEntries.put(name, entry);
@@ -117,7 +139,7 @@ public class Logger {
     /**
      * <p> Logs any variable that can be expressed as a Struct to NetworkTables.
      *     If the code fails to parse the passed object, an error message is printed to the terminal.
-     *     If the type of object being logged is different than the object previously 
+     *     If the type of object being logged is different than the object previously
      *     logged under the same name, it will fail to log and print an error message.
      * <p> You can add a new type of object to the code as long as the class has a static struct variable
      *     expressing its type as a Struct. (ex. SwerveSample.struct, Translation2d.struct)
@@ -136,7 +158,11 @@ public class Logger {
             if (existing != null) {
                 // Check to make sure publishToExisting() will not return an error.
                 if (!existing.getTopic().getStruct().getTypeClass().isInstance(object)) {
-                    System.err.println("ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" + name + "\"");
+                    System.err.println(
+                        "ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" +
+                        name +
+                        "\""
+                    );
                     return;
                 }
 
@@ -149,7 +175,13 @@ public class Logger {
             StructPublisher<?> newPub = createPublisherForObject(name, object, table);
 
             if (newPub == null) {
-                System.err.println("ERROR 400: Unsupported struct type " + object.getClass().getCanonicalName() + " for \"" + name + "\"");
+                System.err.println(
+                    "ERROR 400: Unsupported struct type " +
+                    object.getClass().getCanonicalName() +
+                    " for \"" +
+                    name +
+                    "\""
+                );
                 return;
             }
 
@@ -161,7 +193,7 @@ public class Logger {
     /**
      * <p> Logs any variable that can be expressed as a Struct to NetworkTables.
      *     If the code fails to parse the passed object, an error message is printed to the terminal.
-     *     If the type of object being logged is different than the object previously 
+     *     If the type of object being logged is different than the object previously
      *     logged under the same name, it will fail to log and print an error message.
      * <p> You can add a new type of object to the code as long as the class has a static struct variable
      *     expressing its type as a Struct. (ex. SwerveSample.struct, Translation2d.struct)
@@ -181,7 +213,11 @@ public class Logger {
             if (existing != null) {
                 // Check to make sure publishToExisting() will not return an error.
                 if (!existing.getTopic().getStruct().getTypeClass().isInstance(object)) {
-                    System.err.println("ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" + name + "\"");
+                    System.err.println(
+                        "ERROR 409: Type of object to be logged conflicts with type of previously logged object with name \"" +
+                        name +
+                        "\""
+                    );
                     return;
                 }
 
@@ -194,7 +230,13 @@ public class Logger {
             StructPublisher<?> newPub = createPublisherForObject(name, object, instance.getTable(tableName));
 
             if (newPub == null) {
-                System.err.println("ERROR 400: Unsupported struct type " + object.getClass().getCanonicalName() + " for \"" + name + "\"");
+                System.err.println(
+                    "ERROR 400: Unsupported struct type " +
+                    object.getClass().getCanonicalName() +
+                    " for \"" +
+                    name +
+                    "\""
+                );
                 return;
             }
 
@@ -208,7 +250,7 @@ public class Logger {
      * @param publisher The publisher to use.
      * @param object The object to publish.
      */
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private static void publishToExisting(StructPublisher<?> publisher, Object object) {
         StructPublisher typed = publisher;
         typed.set(object);
@@ -222,27 +264,21 @@ public class Logger {
      * @param object The object to create a publisher for.
      * @return The StructPublisher created for the object passed in or null if the object type isn't recognised.
      */
-    @SuppressWarnings({"unused"})
+    @SuppressWarnings({ "unused" })
     private static StructPublisher<?> createPublisherForObject(String name, Object object, NetworkTable table) {
         if (object instanceof Pose2d pose) { // Is the object of type Pose2d?
             return table.getStructTopic(name, Pose2d.struct).publish(); // Return the StructPublisher for said type.
-        } 
-        else if (object instanceof Rotation2d rotation2d) {
+        } else if (object instanceof Rotation2d rotation2d) {
             return table.getStructTopic(name, Rotation2d.struct).publish();
-        } 
-        else if (object instanceof Translation2d translation2d) {
+        } else if (object instanceof Translation2d translation2d) {
             return table.getStructTopic(name, Translation2d.struct).publish();
-        }
-        else if (object instanceof Pose2d pose2d) {
+        } else if (object instanceof Pose2d pose2d) {
             return table.getStructTopic(name, Pose2d.struct).publish();
-        }
-        else if (object instanceof Pose3d pose3d) {
+        } else if (object instanceof Pose3d pose3d) {
             return table.getStructTopic(name, Pose3d.struct).publish();
-        } 
-        else if (object instanceof Transform2d transform2d) {
+        } else if (object instanceof Transform2d transform2d) {
             return table.getStructTopic(name, Transform2d.struct).publish();
-        } 
-        else if (object instanceof SwerveModuleState state) {
+        } else if (object instanceof SwerveModuleState state) {
             return table.getStructTopic(name, SwerveModuleState.struct).publish();
         }
         // Add other types here using the example code below.
@@ -255,7 +291,7 @@ public class Logger {
         // Most WPILib and Choreo object types contain a static variable
         // of the class as a struct. (ex. SwerveSample.struct, Transform3d.struct)
 
-        return null;  // unsupported type
+        return null; // unsupported type
     }
 
     public static void setEnabled(Boolean enable) {
