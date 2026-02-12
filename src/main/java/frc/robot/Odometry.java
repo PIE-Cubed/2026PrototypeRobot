@@ -98,117 +98,106 @@ public class Odometry {
 
     /**
      * <p> Updates the pose estimators. Calling this outside of robotPeriodic is unnecesary.
-     * <p> Do not run updateUnreadResults() beforehand as it will remove all unread results afterwards.
+     * <p> Do not run getAllUnreadResults() beforehand as it will remove all unread results afterwards.
      */
     public void updateVisionEstimators() {
         camera1Results = camera1.getAllUnreadResults();
+        camera2Results = camera2.getAllUnreadResults();
+        // camera3Results = camera3.getAllUnreadResults();
+        // camera4Results = camera4.getAllUnreadResults();
+
         cameraResults = camera1Results;
 
-        if (camera1Results == null) {
+        // Return early if spinning too fast to get a good estimate.
+        if (drive.getYawRateDegrees() > MAX_YAW_RATE_DEGREES) {
+            camera1RobotPose = null;
+            camera2RobotPose = null;
+            // camera3RobotPose = null;
+            // camera4RobotPose = null;
+
             return;
         }
 
-        if (!camera1Results.isEmpty()) { // Has the camera processed any new results?
-            latestResult = camera1Results.get(camera1Results.size() - 1);
+        int tagCount = 0;
 
-            if (camera1Results.get(camera1Results.size() - 1).hasTargets()) { // Does the camera see any targets?
+        if (camera1Results != null) { // If the camera hasn't connected yet this can be null
+            if (!camera1Results.isEmpty()) { // Has the camera processed any new results?
                 PhotonPipelineResult newResult = camera1Results.get(camera1Results.size() - 1); // Getting newest result
 
-                // Checking if the camera sees enough apriltags while moving slow enough to get a good position estimate
-                if (
-                    (newResult.targets.size() >= REQUIRED_APRILTAGS) &&
-                    (drive.getYawRateDegrees() <= MAX_YAW_RATE_DEGREES)
-                ) {
-                    camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).get(); // Grab estimated Pose3d from camera
+                latestResult = newResult;
+
+                if (newResult.hasTargets()) { // Does the camera see any targets?
+                    tagCount += newResult.targets.size();
+
+                    // Get the estimated field pose from this camera
+                    camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
                 } else {
                     camera1RobotPose = null;
                 }
             } else {
                 camera1RobotPose = null;
             }
-        } else {
-            camera1RobotPose = null;
         }
 
-        camera2Results = camera2.getAllUnreadResults();
-
-        if (camera2Results == null) {
-            return;
-        }
-
-        if (!camera2Results.isEmpty()) { // Has the camera processed any new results?
-            if (camera2Results.get(camera2Results.size() - 1).hasTargets()) { // Does the camera see any targets?
+        if (camera2Results != null) { // If the camera hasn't connected yet this can be null
+            if (!camera2Results.isEmpty()) { // Has the camera processed any new results?
                 PhotonPipelineResult newResult = camera2Results.get(camera2Results.size() - 1); // Getting newest result
 
-                // Checking if the camera sees enough apriltags while moving slow enough to get a good position estimate
-                if (
-                    (newResult.targets.size() >= REQUIRED_APRILTAGS) &&
-                    (drive.getYawRateDegrees() <= MAX_YAW_RATE_DEGREES)
-                ) {
-                    camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).get(); // Grab estimated Pose3d from camera
+                if (newResult.hasTargets()) { // Does the camera see any targets?
+                    tagCount += newResult.targets.size();
+
+                    // Get the estimated field pose from this camera
+                    camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
                 } else {
                     camera2RobotPose = null;
                 }
             } else {
                 camera2RobotPose = null;
             }
-        } else {
-            camera2RobotPose = null;
         }
+
         /*
-        camera3Results = camera3.getAllUnreadResults();
-
-        if (camera3Results == null) { // man idk
-            return;
-        }
-
-        if (!camera3Results.isEmpty()) { // Has the camera processed any new results?
-            // latestResult = camera3Results.get(camera3Results.size() - 1);
-
-            if (camera3Results.get(camera3Results.size() - 1).hasTargets()) { // Does the camera see any targets?
+        if (camera3Results != null) { // If the camera hasn't connected yet this can be null
+            if (!camera3Results.isEmpty()) { // Has the camera processed any new results?
                 PhotonPipelineResult newResult = camera3Results.get(camera3Results.size() - 1); // Getting newest result
-                
-                // Checking if the camera sees enough apriltags while moving slow enough to get a good position estimate
-                if ((newResult.targets.size() >= REQUIRED_APRILTAGS) && (drive.getYawRate() <= MAX_YAW_RATE)) {
-                    camera3Pose3d = camera3PoseEstimator.update(newResult).get(); // Grab estimated Pose3d from camera
-    
-                    // Add vision data to estimator
-                    aprilTagsEstimator.addVisionMeasurement(camera3Pose3d.estimatedPose.toPose3d(), // Estimated pose
-                                                            camera3Pose3d.timestampSeconds, // Time of sample
-                                                            // Standard deviation (inaccuracy) of the camera
-                                                            // camera3.getCameraMatrix().get().extractColumnVector(0)
-                                                            camera3.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3))).extractColumnVector(0));
+
+                if (newResult.hasTargets()) { // Does the camera see any targets?
+                    tagCount += newResult.targets.size();
+
+                    // Get the estimated field pose from this camera
+                    camera3RobotPose = camera3PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
+                } else {
+                    camera3RobotPose = null;
                 }
+            } else {
+                camera3RobotPose = null;
             }
         }
-
         /*
-        camera4Results = camera4.getAllUnreadResults();
-
-        if (camera4Results == null) { // man idk
-            return;
-        }
-
-        if (!camera4Results.isEmpty()) { // Has the camera processed any new results?
-            // latestResult = camera4Results.get(camera4Results.size() - 1);
-
-            if (camera4Results.get(camera4Results.size() - 1).hasTargets()) { // Does the camera see any targets?
+        if (camera4Results != null) { // If the camera hasn't connected yet this can be null
+            if (!camera4Results.isEmpty()) { // Has the camera processed any new results?
                 PhotonPipelineResult newResult = camera4Results.get(camera4Results.size() - 1); // Getting newest result
-                
-                // Checking if the camera sees enough apriltags while moving slow enough to get a good position estimate
-                if ((newResult.targets.size() >= REQUIRED_APRILTAGS) && (drive.getYawRate() <= MAX_YAW_RATE)) {
-                    camera4Pose3d = camera4PoseEstimator.update(newResult).get(); // Grab estimated Pose3d from camera
-    
-                    // Add vision data to estimator
-                    aprilTagsEstimator.addVisionMeasurement(camera4Pose3d.estimatedPose.toPose4d(), // Estimated pose
-                                                            camera4Pose3d.timestampSeconds, // Time of sample
-                                                            // Standard deviation (inaccuracy) of the camera
-                                                            // camera4.getCameraMatrix().get().extractColumnVector(0)
-                                                            camera4.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3))).extractColumnVector(0));
+
+                if (newResult.hasTargets()) { // Does the camera see any targets?
+                    tagCount += newResult.targets.size();
+
+                    // Get the estimated field pose from this camera
+                    camera4RobotPose = camera4PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
+                } else {
+                    camera4RobotPose = null;
                 }
+            } else {
+                camera4RobotPose = null;
             }
         }
         */
+
+        if (tagCount < REQUIRED_APRILTAGS) {
+            camera1RobotPose = null;
+            camera2RobotPose = null;
+            // camera3RobotPose = null;
+            // camera4RobotPose = null;
+        }
     }
 
     public List<Matrix<N3, N3>> getAllStdDevs() {
