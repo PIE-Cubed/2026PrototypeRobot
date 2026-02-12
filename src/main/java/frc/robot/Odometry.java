@@ -31,12 +31,17 @@ public class Odometry {
     // When rotation is 0 for all axes the Z axis is parallel to the front of the robot.
     // TODO: figure out camera offsets and get multi cam setup working
     private final Transform3d ROBOT_TO_CAMERA1 = new Transform3d(
-        Units.inchesToMeters(14.532183),
-        Units.inchesToMeters(0),
-        Units.inchesToMeters(6.081022),
-        new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-23), Units.degreesToRadians(0))
+        Units.inchesToMeters(9),
+        Units.inchesToMeters(-13),
+        Units.inchesToMeters(8.5),
+        new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(22 + 90), Units.degreesToRadians(0))
     );
-    private final Transform3d ROBOT_TO_CAMERA2 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
+    private final Transform3d ROBOT_TO_CAMERA2 = new Transform3d(
+        Units.inchesToMeters(-9),
+        Units.inchesToMeters(11.5),
+        Units.inchesToMeters(8.5),
+        new Rotation3d(Units.degreesToRadians(29 + 90), Units.degreesToRadians(0), Units.degreesToRadians(90))
+    );
     // private final Transform3d ROBOT_TO_CAMERA3 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     // private final Transform3d ROBOT_TO_CAMERA4 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
 
@@ -114,7 +119,7 @@ public class Odometry {
                     (newResult.targets.size() >= REQUIRED_APRILTAGS) &&
                     (drive.getYawRateDegrees() <= MAX_YAW_RATE_DEGREES)
                 ) {
-                    camera1RobotPose = camera1PoseEstimator.update(newResult).get(); // Grab estimated Pose3d from camera
+                    camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).get(); // Grab estimated Pose3d from camera
                 } else {
                     camera1RobotPose = null;
                 }
@@ -132,8 +137,6 @@ public class Odometry {
         }
 
         if (!camera2Results.isEmpty()) { // Has the camera processed any new results?
-            // latestResult = camera2Results.get(camera2Results.size() - 1);
-
             if (camera2Results.get(camera2Results.size() - 1).hasTargets()) { // Does the camera see any targets?
                 PhotonPipelineResult newResult = camera2Results.get(camera2Results.size() - 1); // Getting newest result
 
@@ -142,7 +145,7 @@ public class Odometry {
                     (newResult.targets.size() >= REQUIRED_APRILTAGS) &&
                     (drive.getYawRateDegrees() <= MAX_YAW_RATE_DEGREES)
                 ) {
-                    camera2RobotPose = camera2PoseEstimator.update(newResult).get(); // Grab estimated Pose3d from camera
+                    camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).get(); // Grab estimated Pose3d from camera
                 } else {
                     camera2RobotPose = null;
                 }

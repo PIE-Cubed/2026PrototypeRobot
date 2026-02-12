@@ -63,7 +63,7 @@ public class Robot extends TimedRobot {
 
         controls = new Controls();
         drive = new Drive();
-        shooter = new Shooter();
+        // shooter = new Shooter();
         // climber = new Climber();
         odometry = new Odometry(drive);
     }
@@ -84,11 +84,11 @@ public class Robot extends TimedRobot {
 
         drive.updatePoseEstimator();
 
-        if (odometry.getCamera1Pose() == null) {
+        if (odometry.getCamera1Pose() != null) {
             drive.addVisionMeasurement(odometry.getCamera1Pose(), odometry.getAllStdDevs().get(0));
         }
 
-        if (odometry.getCamera2Pose() == null) {
+        if (odometry.getCamera2Pose() != null) {
             drive.addVisionMeasurement(odometry.getCamera2Pose(), odometry.getAllStdDevs().get(1));
         }
 
