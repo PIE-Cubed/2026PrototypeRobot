@@ -28,6 +28,8 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.util.AllianceUtil;
 import java.util.List;
 import org.photonvision.EstimatedRobotPose;
 
@@ -482,6 +484,40 @@ public class Drive {
             true,
             false
         );
+    }
+
+    public int shootAndDrive(
+        double forwardPower,
+        double strafePower,
+        boolean fieldDrive,
+        Translation2d centerOfRotation
+    ) {
+        return pointAtDrive(
+            forwardPower,
+            strafePower,
+            // Use red hub location if on red alliance and vice versa
+            ((AllianceUtil.isRedAlliance()) ? FieldConstants.hubRedAlliance : FieldConstants.hubBlueAlliance),
+            fieldDrive,
+            centerOfRotation
+        );
+    }
+
+    public int pointAtDrive(
+        double forwardPower,
+        double strafePower,
+        Pose2d target,
+        boolean fieldDrive,
+        Translation2d centerOfRotation
+    ) {
+        Transform2d poseDiff = target.minus(getPose());
+        double targetAngleDegrees = Math.toDegrees(Math.atan2(poseDiff.getY(), poseDiff.getX()));
+        double rotatePower = rotatePID.calculate(getYawRadians(), targetAngleDegrees);
+
+        teleopDrive(forwardPower, strafePower, rotatePower, fieldDrive, centerOfRotation);
+
+        if (rotatePID.atSetpoint()) return Robot.DONE;
+
+        return Robot.CONT;
     }
 
     public double getYawRadians() {
