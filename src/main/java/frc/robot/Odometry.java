@@ -79,12 +79,12 @@ public class Odometry {
 
         // Instantiate the pose estimators for each camera
         camera1PoseEstimator = new PhotonPoseEstimator(
-            AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded), // Field selection
+            AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded), // Field selection
             ROBOT_TO_CAMERA1 // Camera offset from robot
         );
 
         camera2PoseEstimator = new PhotonPoseEstimator(
-            AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded),
+            AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded),
             ROBOT_TO_CAMERA2
         );
         // camera3PoseEstimator = new PhotonPoseEstimator(
@@ -130,7 +130,7 @@ public class Odometry {
                     tagCount += newResult.targets.size();
 
                     // Get the estimated field pose from this camera
-                    camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
+                    camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).orElse(null);
                 } else {
                     camera1RobotPose = null;
                 }
@@ -147,7 +147,7 @@ public class Odometry {
                     tagCount += newResult.targets.size();
 
                     // Get the estimated field pose from this camera
-                    camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
+                    camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).orElse(null);
                 } else {
                     camera2RobotPose = null;
                 }
