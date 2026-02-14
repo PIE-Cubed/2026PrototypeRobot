@@ -31,28 +31,38 @@ public class Odometry {
     private final double MAX_YAW_RATE_DEGREES = 360; // Maximum angular velocity(degrees/s) to update AprilTag estimator
 
     // Pose measurements done by hand to obtain camera offsets
-    private final Pose3d CENTER_REF_CORNERED = new Pose3d(
-        Drive.SWERVE_DIST_FROM_CENTER,
-        Drive.SWERVE_DIST_FROM_CENTER,
-        0,
-        Rotation3d.kZero
-    );
-
     private final Pose3d CENTER_REF_CAMERA1 = new Pose3d(
-        Drive.SWERVE_DIST_FROM_CENTER,
-        Drive.SWERVE_DIST_FROM_CENTER,
+        Units.inchesToMeters(140),
+        Units.inchesToMeters(49.5),
         0,
         Rotation3d.kZero
     );
 
-    private final Pose3d CAMERA1_POSE_SAMPLE = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0));
-    private final Pose3d CAMERA2_POSE_CORNERED = new Pose3d(0, 0, 0, new Rotation3d(0, 0, 0));
+    private final Pose3d CENTER_REF_CAMERA2 = new Pose3d(
+        Units.inchesToMeters(140),
+        Units.inchesToMeters(55.5),
+        0,
+        new Rotation3d(Rotation2d.kCW_90deg)
+    );
+
+    private final Pose3d CAMERA1_POSE_SAMPLE = new Pose3d(
+        3.92, // meters
+        1.49, // meters
+        0.124, // meters
+        new Rotation3d(Units.degreesToRadians(-1.0), Units.degreesToRadians(-25.5), Units.degreesToRadians(91.7))
+    );
+    private final Pose3d CAMERA2_POSE_SAMPLE = new Pose3d(
+        3.37, // meters
+        1.70, // meters
+        0.10, // meters
+        new Rotation3d(Units.degreesToRadians(-2.7), Units.degreesToRadians(-29.0), Units.degreesToRadians(92.1))
+    );
 
     // Distances from bottom center of robot to each camera
     // When rotation is 0 for all axes the Z axis is parallel to the front of the robot.
     // TODO: figure out camera offsets and get multi cam setup working
     private final Transform3d ROBOT_TO_CAMERA1 = CAMERA1_POSE_SAMPLE.minus(CENTER_REF_CAMERA1);
-    private final Transform3d ROBOT_TO_CAMERA2 = CAMERA2_POSE_CORNERED.minus(CENTER_REF_CORNERED);
+    private final Transform3d ROBOT_TO_CAMERA2 = CAMERA2_POSE_SAMPLE.minus(CENTER_REF_CAMERA2);
 
     // private final Transform3d ROBOT_TO_CAMERA1 = new Transform3d(
     //     Units.inchesToMeters(-9),
@@ -159,8 +169,8 @@ public class Odometry {
                     } else {
                         camera1RobotPose = camera1PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
                     }
-
-                    System.out.println("camera1RobotPose" + camera1RobotPose.estimatedPose);
+                    // System.out.println("camera1RobotPose" + camera1RobotPose.estimatedPose);
+                    Logger.logStruct("camera1Results", camera1RobotPose.estimatedPose);
                 } else {
                     camera1RobotPose = null;
                 }
@@ -182,15 +192,14 @@ public class Odometry {
                     } else {
                         camera2RobotPose = camera2PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
                     }
-
-                    System.out.println("camera2RobotPose" + camera2RobotPose.estimatedPose);
+                    // System.out.println("camera2RobotPose" + camera2RobotPose.estimatedPose);
+                    Logger.logStruct("camera2Results", camera2RobotPose.estimatedPose);
                 } else {
                     camera2RobotPose = null;
                 }
             } else {
                 camera2RobotPose = null;
             }
-            // Logger.logStruct("camera2Results", camera2RobotPose.estimatedPose);
         }
 
         /*
