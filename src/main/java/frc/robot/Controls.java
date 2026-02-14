@@ -75,6 +75,14 @@ public class Controls {
         //return false;
     }
 
+    public boolean getAutoAlign() {
+        return driveController.getGButton();
+    }
+
+    public boolean getAutoAim() {
+        return driveController.getCThreePosSwitch() == 1;
+    }
+
     public boolean getClimberUp() {
         return driveController.getDButtonPressed();
     }

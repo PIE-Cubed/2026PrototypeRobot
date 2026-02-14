@@ -35,7 +35,7 @@ import org.photonvision.EstimatedRobotPose;
 
 public class Drive {
 
-    public static final double SWERVE_DIST_FROM_CENTER = 0.3254375;
+    public static final double SWERVE_DIST_FROM_CENTER = Units.feetToMeters(29.0 / 24.0);
     public static final Translation2d centerLocation = new Translation2d(0, 0);
     public static final Translation2d frontLeftLocation = new Translation2d(
         SWERVE_DIST_FROM_CENTER,
@@ -181,7 +181,7 @@ public class Drive {
         choreoRotatePID.setIntegratorRange(-CHOREO_R_I_RANGE, CHOREO_R_I_RANGE);
         choreoRotatePID.setIZone(CHOREO_R_I_ZONE);
 
-        timer = new Timer();
+        otfTimer = new Timer();
 
         SwerveModulePosition[] initialPosition = getModulePositions();
         Rotation2d initialRotation = new Rotation2d(getYawRadians());
@@ -202,7 +202,7 @@ public class Drive {
             APRILTAG_STD_DEV
         );
 
-        timer.restart();
+        otfTimer.restart();
     }
 
     public void teleopDrive(
@@ -486,34 +486,24 @@ public class Drive {
         );
     }
 
-    public int shootAndDrive(
-        double forwardPower,
-        double strafePower,
-        boolean fieldDrive,
-        Translation2d centerOfRotation
-    ) {
-        return pointAtDrive(
-            forwardPower,
-            strafePower,
-            // Use red hub location if on red alliance and vice versa
-            ((AllianceUtil.isRedAlliance()) ? FieldConstants.hubRedAlliance : FieldConstants.hubBlueAlliance),
-            fieldDrive,
-            centerOfRotation
-        );
+    public int shootAndDrive(double forwardPower, double strafePower, boolean fieldDrive) {
+        // Use red hub location if on red alliance and vice versa
+        Pose2d hubPose2d =
+            ((AllianceUtil.isRedAlliance()) ? FieldConstants.hubRedAlliance : FieldConstants.hubBlueAlliance);
+
+        // System.out.println(
+        //     "Distance to hub center: " + getPose().getTranslation().getDistance(hubPose2d.getTranslation())
+        // );
+
+        return pointAtDrive(forwardPower, strafePower, hubPose2d, fieldDrive);
     }
 
-    public int pointAtDrive(
-        double forwardPower,
-        double strafePower,
-        Pose2d target,
-        boolean fieldDrive,
-        Translation2d centerOfRotation
-    ) {
+    public int pointAtDrive(double forwardPower, double strafePower, Pose2d target, boolean fieldDrive) {
         Transform2d poseDiff = target.minus(getPose());
         double targetAngleDegrees = Math.toDegrees(Math.atan2(poseDiff.getY(), poseDiff.getX()));
         double rotatePower = rotatePID.calculate(getYawRadians(), targetAngleDegrees);
 
-        teleopDrive(forwardPower, strafePower, rotatePower, fieldDrive, centerOfRotation);
+        teleopDrive(forwardPower, strafePower, rotatePower, fieldDrive);
 
         if (rotatePID.atSetpoint()) return Robot.DONE;
 

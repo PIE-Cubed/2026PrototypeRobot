@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.util.AllianceUtil;
+import frc.robot.util.Logger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,6 +39,15 @@ public class Robot extends TimedRobot {
     private static final String kCustomAuto = "My Auto";
     private String m_autoSelected;
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+    private enum WheelState {
+        TELEOP,
+        LOCK_WHEELS,
+        AUTO_DRIVE,
+        AUTO_AIM,
+    }
+
+    WheelState currentWheelState = WheelState.TELEOP;
 
     private PowerDistribution pdh;
 
@@ -87,15 +97,15 @@ public class Robot extends TimedRobot {
         drive.updatePoseEstimator();
 
         if (odometry.getCamera1Pose() != null) {
-            // drive.addVisionMeasurement(odometry.getCamera1Pose(), odometry.getAllStdDevs().get(0));
+            drive.addVisionMeasurement(odometry.getCamera1Pose(), odometry.getAllStdDevs().get(0));
         }
 
         if (odometry.getCamera2Pose() != null) {
-            // drive.addVisionMeasurement(odometry.getCamera2Pose(), odometry.getAllStdDevs().get(1));
-            // field2d.setRobotPose(odometry.getCamera2Pose().estimatedPose.toPose2d());
+            drive.addVisionMeasurement(odometry.getCamera2Pose(), odometry.getAllStdDevs().get(1));
         }
 
-        // TODO: test the encoder odometry by itself, camera odometry seemed good on thursday
+        Logger.logStruct("currentPose2d", Drive.getPose());
+
         field2d.setRobotPose(Drive.getPose());
         SmartDashboard.putData("Field", field2d);
 
@@ -187,19 +197,46 @@ public class Robot extends TimedRobot {
         boolean resetGyro = controls.resetGyro();
         boolean fieldDrive = controls.getFieldDrive();
         boolean lockWheels = controls.getWheelLock();
+        boolean autoAlign = controls.getAutoAlign();
+        boolean autoAim = controls.getAutoAim();
 
         double forwardPowerFwdPos = controls.getForwardPowerFwdPositive();
         double strafePowerLeftPos = controls.getStrafePowerLeftPositive();
         double rotatePowerCcwPos = controls.getRotatePowerCcwPositive();
-
-        if (lockWheels) {
-            drive.lockWheels();
-        } else {
-            drive.teleopDrive(forwardPowerFwdPos, strafePowerLeftPos, rotatePowerCcwPos, fieldDrive);
-        }
+        double rightStickY = controls.getRightY();
 
         if (resetGyro) {
             drive.resetGyro();
+        }
+
+        if (lockWheels) {
+            currentWheelState = WheelState.LOCK_WHEELS;
+        } else if (autoAlign) {
+            if (currentWheelState != WheelState.AUTO_DRIVE) {
+                drive.otfReset();
+            }
+
+            currentWheelState = WheelState.AUTO_DRIVE;
+        } else if (autoAim) {
+            currentWheelState = WheelState.AUTO_AIM;
+        } else {
+            currentWheelState = WheelState.TELEOP;
+        }
+
+        if (currentWheelState == WheelState.LOCK_WHEELS) {
+            drive.lockWheels();
+        } else if (currentWheelState == WheelState.AUTO_DRIVE) {
+            drive.otfDriveTo(new Pose2d(3.2, 1.9, new Rotation2d(Math.toRadians(0.0))));
+        } else if (currentWheelState == WheelState.AUTO_AIM) {
+            drive.shootAndDrive(forwardPowerFwdPos, strafePowerLeftPos, fieldDrive);
+        } else if (currentWheelState == WheelState.TELEOP) {
+            drive.teleopDrive(
+                forwardPowerFwdPos,
+                strafePowerLeftPos,
+                rotatePowerCcwPos,
+                fieldDrive,
+                drive.getCenterOfRotation(rotatePowerCcwPos, rightStickY)
+            );
         }
     }
 }

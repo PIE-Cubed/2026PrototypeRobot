@@ -169,7 +169,7 @@ public class Odometry {
                         camera1RobotPose = camera1PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
                     }
                     // System.out.println("camera1RobotPose" + camera1RobotPose.estimatedPose);
-                    Logger.logStruct("camera1Results", camera1RobotPose.estimatedPose);
+                    // Logger.logStruct("camera1Results", camera1RobotPose.estimatedPose);
                 } else {
                     camera1RobotPose = null;
                 }
@@ -192,7 +192,7 @@ public class Odometry {
                         camera2RobotPose = camera2PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
                     }
                     // System.out.println("camera2RobotPose" + camera2RobotPose.estimatedPose);
-                    Logger.logStruct("camera2Results", camera2RobotPose.estimatedPose);
+                    // Logger.logStruct("camera2Results", camera2RobotPose.estimatedPose);
                 } else {
                     camera2RobotPose = null;
                 }
