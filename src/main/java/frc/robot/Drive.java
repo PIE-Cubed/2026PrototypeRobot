@@ -628,7 +628,7 @@ public class Drive {
         Rotation2d currentRotation = new Rotation2d(getYawRadians());
 
         // Update vision estimator with encoder data
-        aprilTagsEstimator.updateWithTime(timer.get(), currentRotation, currentPosition);
+        aprilTagsEstimator.update(currentRotation, currentPosition);
 
         lastPose = currPose;
         currPose = getPose();
