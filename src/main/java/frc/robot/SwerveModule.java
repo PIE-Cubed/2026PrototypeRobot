@@ -60,18 +60,18 @@ public class SwerveModule {
     // Drive motor conversion factor cacluations
     public static final double EXTERNAL_GEARING = 5.08;
     public static final double WHEEL_DIAMETER_INCHES = 2.88;
-    private final double WHEEL_CIRCUMFERENCE_FEET = (Math.PI * WHEEL_DIAMETER_INCHES) / 12; // Feet per rotation (circumference)
+    private final double WHEEL_CIRCUMFERENCE_FEET = (Math.PI * WHEEL_DIAMETER_INCHES) / 12.0; // Feet per wheel rotation (circumference)
     public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(WHEEL_DIAMETER_INCHES);
     public static final double NEO_VORTEX_FREE_RPM = 6500.0 * 0.9; // multiply by 0.9 for practicality
     public static final double MAX_DRIVE_VEL_MPS =
-        (((WHEEL_DIAMETER_METERS * Math.PI) / EXTERNAL_GEARING) * NEO_VORTEX_FREE_RPM) / 60;
+        (((WHEEL_DIAMETER_METERS * Math.PI) / EXTERNAL_GEARING) * NEO_VORTEX_FREE_RPM) / 60.0;
     // MAX_DRIVE_VEL_MPS is around 4.5 meters per second
-    public static final double MAX_ROTATE_VEL_DPS = 280;
+    public static final double MAX_ROTATE_VEL_DPS = 280.0;
     // MAX_ROTATE_VEL_DPS is around 280 degrees per second
     public static final double REV_SPIKED_WHEEL_COF = 1.2;
 
     // Drive Motor Conversion Factors
-    private final double DRIVE_POS_CONVERSION_FACTOR = WHEEL_CIRCUMFERENCE_FEET / EXTERNAL_GEARING; // Feet per tick
+    private final double DRIVE_POS_CONVERSION_FACTOR = WHEEL_CIRCUMFERENCE_FEET / EXTERNAL_GEARING; // Feet per motor rotation
     private final double DRIVE_VEL_CONVERSION_FACTOR = DRIVE_POS_CONVERSION_FACTOR / 60.0; // Feet per second
 
     // Rotate Motor Conversion Factor
