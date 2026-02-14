@@ -4,11 +4,14 @@ package frc.robot;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.util.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import org.ejml.simple.SimpleMatrix;
@@ -79,20 +82,20 @@ public class Odometry {
 
         // Instantiate the pose estimators for each camera
         camera1PoseEstimator = new PhotonPoseEstimator(
-            AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded), // Field selection
+            AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField), // Field selection
             ROBOT_TO_CAMERA1 // Camera offset from robot
         );
 
         camera2PoseEstimator = new PhotonPoseEstimator(
-            AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded),
+            AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField),
             ROBOT_TO_CAMERA2
         );
         // camera3PoseEstimator = new PhotonPoseEstimator(
-        //     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded),
+        //     AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField),
         //     ROBOT_TO_CAMERA3);
 
         // camera4PoseEstimator = new PhotonPoseEstimator(
-        //     AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded),
+        //     AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField),
         //     ROBOT_TO_CAMERA4);
     }
 
@@ -130,7 +133,13 @@ public class Odometry {
                     tagCount += newResult.targets.size();
 
                     // Get the estimated field pose from this camera
-                    camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).orElse(null);
+                    try {
+                        camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
+                    } catch (Exception e) {
+                        camera1RobotPose = camera1PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
+                    }
+
+                    System.out.println("camera1RobotPose" + camera1RobotPose.estimatedPose);
                 } else {
                     camera1RobotPose = null;
                 }
@@ -147,13 +156,20 @@ public class Odometry {
                     tagCount += newResult.targets.size();
 
                     // Get the estimated field pose from this camera
-                    camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).orElse(null);
+                    try {
+                        camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
+                    } catch (Exception e) {
+                        camera2RobotPose = camera2PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
+                    }
+
+                    System.out.println("camera2RobotPose" + camera2RobotPose.estimatedPose);
                 } else {
                     camera2RobotPose = null;
                 }
             } else {
                 camera2RobotPose = null;
             }
+            // Logger.logStruct("camera2Results", camera2RobotPose.estimatedPose);
         }
 
         /*
@@ -200,6 +216,10 @@ public class Odometry {
         }
     }
 
+    /**
+     * Returns a list of the standard deviations of each camera
+     * @return the list
+     */
     public List<Matrix<N3, N3>> getAllStdDevs() {
         return List.of(
             camera1.getCameraMatrix().orElse(new Matrix<N3, N3>(new SimpleMatrix(3, 3))),
@@ -211,7 +231,7 @@ public class Odometry {
 
     /**
      * </p> Gets the current AprilTag-assisted field position from camera1.
-     *      If no tags are seen or the Orange PIs haven't produced a new result, relies on encoder pose.
+     *      If no tags are seen or the Orange PIs haven't produced a new result, returns null.
      * </p> Refer to the WPILib docs for specifics on field-based odometry.
      *
      * @return The estimated Pose. (in meters)
@@ -222,7 +242,7 @@ public class Odometry {
 
     /**
      * </p> Gets the current AprilTag-assisted field position from camera2.
-     *      If no tags are seen or the Orange PIs haven't produced a new result, relies on encoder pose.
+     *      If no tags are seen or the Orange PIs haven't produced a new result, returns null.
      * </p> Refer to the WPILib docs for specifics on field-based odometry.
      *
      * @return The estimated Pose. (in meters)
