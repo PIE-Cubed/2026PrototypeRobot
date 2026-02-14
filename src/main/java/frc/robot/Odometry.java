@@ -154,9 +154,9 @@ public class Odometry {
                     tagCount += newResult.targets.size();
 
                     // Get the estimated field pose from this camera
-                    try {
+                    if (newResult.targets.size() >= 2) {
                         camera1RobotPose = camera1PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
-                    } catch (Exception e) {
+                    } else {
                         camera1RobotPose = camera1PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
                     }
 
@@ -177,9 +177,9 @@ public class Odometry {
                     tagCount += newResult.targets.size();
 
                     // Get the estimated field pose from this camera
-                    try {
+                    if (newResult.targets.size() >= 2) {
                         camera2RobotPose = camera2PoseEstimator.estimateCoprocMultiTagPose(newResult).get();
-                    } catch (Exception e) {
+                    } else {
                         camera2RobotPose = camera2PoseEstimator.estimateLowestAmbiguityPose(newResult).get();
                     }
 
