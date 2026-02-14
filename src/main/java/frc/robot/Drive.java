@@ -654,7 +654,7 @@ public class Drive {
      *
      * @param newPose The Pose2d to reset to.
      */
-    public void reset(Pose2d newPose) {
+    public void resetPose(Pose2d newPose) {
         SwerveModulePosition[] currentPosition = getModulePositions();
         Rotation2d gyro = new Rotation2d(getYawRadians());
 
