@@ -66,6 +66,8 @@ public class Robot extends TimedRobot {
         // shooter = new Shooter();
         // climber = new Climber();
         odometry = new Odometry(drive);
+
+        drive.resetPose(new Pose2d(Drive.SWERVE_DIST_FROM_CENTER, Drive.SWERVE_DIST_FROM_CENTER, Rotation2d.kZero));
     }
 
     /**
@@ -85,13 +87,15 @@ public class Robot extends TimedRobot {
         drive.updatePoseEstimator();
 
         if (odometry.getCamera1Pose() != null) {
-            drive.addVisionMeasurement(odometry.getCamera1Pose(), odometry.getAllStdDevs().get(0));
+            // drive.addVisionMeasurement(odometry.getCamera1Pose(), odometry.getAllStdDevs().get(0));
         }
 
         if (odometry.getCamera2Pose() != null) {
-            drive.addVisionMeasurement(odometry.getCamera2Pose(), odometry.getAllStdDevs().get(1));
+            // drive.addVisionMeasurement(odometry.getCamera2Pose(), odometry.getAllStdDevs().get(1));
+            // field2d.setRobotPose(odometry.getCamera2Pose().estimatedPose.toPose2d());
         }
 
+        // TODO: test the encoder odometry by itself, camera odometry seemed good on thursday
         field2d.setRobotPose(Drive.getPose());
         SmartDashboard.putData("Field", field2d);
 
