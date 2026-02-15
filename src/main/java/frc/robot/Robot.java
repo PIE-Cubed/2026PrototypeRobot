@@ -97,11 +97,11 @@ public class Robot extends TimedRobot {
         drive.updatePoseEstimator();
 
         if (odometry.getCamera1Pose() != null) {
-            drive.addVisionMeasurement(odometry.getCamera1Pose(), odometry.getAllStdDevs().get(0));
+            drive.addVisionMeasurement(odometry.getCamera1Pose(), Odometry.CAMERA1_STD_DEVS);
         }
 
         if (odometry.getCamera2Pose() != null) {
-            drive.addVisionMeasurement(odometry.getCamera2Pose(), odometry.getAllStdDevs().get(1));
+            drive.addVisionMeasurement(odometry.getCamera2Pose(), Odometry.CAMERA2_STD_DEVS);
         }
 
         Logger.logStruct("currentPose2d", Drive.getPose());

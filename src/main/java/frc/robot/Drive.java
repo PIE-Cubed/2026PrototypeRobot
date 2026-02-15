@@ -25,6 +25,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
@@ -625,15 +626,15 @@ public class Drive {
     }
 
     /**
-     * Adds a vision pose estimate to the pose estimator.
+     * Adds a vision pose estimate to the pose estimator. Call this once per AprilTag camera per loop.
      * Does not need to be called every loop as long as updatePoseEstimator is called.
      * @param visionEst The estimated pose from the cameras.
      */
-    public void addVisionMeasurement(EstimatedRobotPose visionEst, Matrix<N3, N3> stdDevs) {
+    public void addVisionMeasurement(EstimatedRobotPose visionEst, Matrix<N3, N1> stdDevs) {
         aprilTagsEstimator.addVisionMeasurement(
             visionEst.estimatedPose.toPose2d(),
             visionEst.timestampSeconds,
-            stdDevs.extractColumnVector(0) // Standard deviations of the camera
+            stdDevs
         );
     }
 

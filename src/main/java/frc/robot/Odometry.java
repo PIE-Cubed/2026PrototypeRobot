@@ -4,6 +4,8 @@ package frc.robot;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -28,6 +30,13 @@ public class Odometry {
 
     private final int REQUIRED_APRILTAGS = 2; // Number of required AprilTags to update the AprilTag estimator
     private final double MAX_YAW_RATE_DEGREES = 360; // Maximum angular velocity(degrees/s) to update AprilTag estimator
+
+    /***********************************************************************************************************************/
+    /*                Standard deviations for each camera, with X and Y in meters and rotation in radians.                 */
+    /***********************************************************************************************************************/
+    /*                                                                   | X |     | Y |          | ROTATION |             */
+    public static final Vector<N3> CAMERA1_STD_DEVS = VecBuilder.fill(0.125, 0.125, Units.degreesToRadians(1));
+    public static final Vector<N3> CAMERA2_STD_DEVS = VecBuilder.fill(0.125, 0.125, Units.degreesToRadians(1));
 
     // Pose measurements done by hand to obtain camera offsets
     private final Pose3d CENTER_REF_CAMERA1 = new Pose3d(
