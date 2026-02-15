@@ -122,8 +122,6 @@ public class Drive {
     private Pose2d lastPose = new Pose2d();
     private Pose2d currPose = new Pose2d();
 
-    private Timer timer;
-
     private AHRS ahrs;
 
     public Drive() {

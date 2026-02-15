@@ -13,11 +13,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.util.AllianceUtil;
 import frc.robot.util.Logger;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -55,7 +52,6 @@ public class Robot extends TimedRobot {
 
     private Controls controls;
     private Drive drive;
-    private Shooter shooter;
     private Climber climber;
     private Odometry odometry;
 
@@ -89,7 +85,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
-        // SmartDashboard.putNumber("Voltage", pdh.getVoltage());
+        SmartDashboard.putNumber("Voltage", pdh.getVoltage());
 
         // Odometry and Pose
         odometry.updateVisionEstimators();

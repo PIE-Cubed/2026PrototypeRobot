@@ -10,7 +10,6 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.measure.Voltage;
 
 public class Shooter {
 
@@ -20,10 +19,10 @@ public class Shooter {
     private SparkFlex bottomMotor;
     private SparkBaseConfig bottomMotorConfig;
 
-    private RelativeEncoder topMotorEncoder;
+    // private RelativeEncoder topMotorEncoder;
     private RelativeEncoder bottomMotorEncoder;
 
-    private PIDController topPIDController;
+    // private PIDController topPIDController;
     private PIDController bottomPIDController;
 
     // Motor IDs
@@ -31,9 +30,9 @@ public class Shooter {
     private final int BOTTOM_MOTOR_ID = 20;
 
     // PID Values
-    private final double TOP_P = 0.0055;
-    private final double TOP_I = 0.0;
-    private final double TOP_D = 0.0;
+    // private final double TOP_P = 0.0055;
+    // private final double TOP_I = 0.0;
+    // private final double TOP_D = 0.0;
 
     private final double BOTTOM_P = 0.0055;
     private final double BOTTOM_I = 0.0;
@@ -64,10 +63,10 @@ public class Shooter {
 
         bottomMotor.configure(bottomMotorConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
-        topMotorEncoder = topMotor.getEncoder();
+        // topMotorEncoder = topMotor.getEncoder();
         bottomMotorEncoder = bottomMotor.getEncoder();
 
-        topPIDController = new PIDController(TOP_P, TOP_I, TOP_D);
+        // topPIDController = new PIDController(TOP_P, TOP_I, TOP_D);
         bottomPIDController = new PIDController(BOTTOM_P, BOTTOM_I, BOTTOM_D);
     }
 
