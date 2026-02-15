@@ -500,10 +500,28 @@ public class Drive {
     }
 
     public int pointAtDrive(double forwardPower, double strafePower, Pose2d target, boolean fieldDrive) {
+        Rotation2d currentRotation = getPose().getRotation();
+
+        ChassisSpeeds currentFieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+            forwardPower * SwerveModule.MAX_DRIVE_VEL_MPS,
+            strafePower * SwerveModule.MAX_DRIVE_VEL_MPS,
+            0,
+            currentRotation
+        );
+
+        // account for robot velocity
+        target = target.plus(
+            new Transform2d(
+                currentFieldSpeeds.vxMetersPerSecond,
+                currentFieldSpeeds.vyMetersPerSecond,
+                Rotation2d.kZero
+            ).inverse()
+        );
+
         Transform2d poseDiff = target.minus(getPose());
         double targetAngleDegrees = Math.toDegrees(Math.atan2(poseDiff.getY(), poseDiff.getX()));
-        double rotatePower = rotatePID.calculate(getYawRadians(), targetAngleDegrees);
 
+        double rotatePower = rotatePID.calculate(currentRotation.getDegrees(), targetAngleDegrees);
         teleopDrive(forwardPower, strafePower, rotatePower, fieldDrive);
 
         if (rotatePID.atSetpoint()) return Robot.DONE;
