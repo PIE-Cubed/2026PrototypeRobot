@@ -174,11 +174,13 @@ public class Drive {
         otfRotatePID.setTolerance(OTF_R_TOLERANCE);
         otfRotatePID.setIntegratorRange(-OTF_R_I_RANGE, OTF_R_I_RANGE);
         otfRotatePID.setIZone(OTF_R_I_ZONE);
+        otfRotatePID.enableContinuousInput(-180, 180);
 
         choreoRotatePID = new PIDController(CHOREO_R_P, CHOREO_R_I, CHOREO_R_D);
         choreoRotatePID.setTolerance(CHOREO_R_TOLERANCE);
         choreoRotatePID.setIntegratorRange(-CHOREO_R_I_RANGE, CHOREO_R_I_RANGE);
         choreoRotatePID.setIZone(CHOREO_R_I_ZONE);
+        choreoRotatePID.enableContinuousInput(-Math.PI, Math.PI);
 
         otfTimer = new Timer();
 

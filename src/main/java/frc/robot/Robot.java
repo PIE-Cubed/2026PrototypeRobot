@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
 
     private Controls controls;
     private Drive drive;
+    private Auto auto;
     private Climber climber;
     private Odometry odometry;
 
@@ -69,11 +70,13 @@ public class Robot extends TimedRobot {
 
         controls = new Controls();
         drive = new Drive();
+        auto = new Auto(drive);
         // shooter = new Shooter();
         // climber = new Climber();
         odometry = new Odometry(drive);
 
         drive.resetPose(new Pose2d(Drive.SWERVE_DIST_FROM_CENTER, Drive.SWERVE_DIST_FROM_CENTER, Rotation2d.kZero));
+        auto.initializeTrajectory("test1");
     }
 
     /**
@@ -163,22 +166,25 @@ public class Robot extends TimedRobot {
 
     /** This function is called once when test mode is enabled. */
     @Override
-    public void testInit() {}
+    public void testInit() {
+        auto.restartTimer();
+    }
 
     /** This function is called periodically during test mode. */
     @Override
     public void testPeriodic() {
+        auto.choreoPathFollower();
         //     double velocity;
 
         //    velocity = SmartDashboard.getNumber("Motor velocity", 0);
         //     shooter.setVelocity(velocity);
 
-        double climbUp = controls.getClimberUpPower();
-        double climbDown = controls.getClimberDownPower();
+        // double climbUp = controls.getClimberUpPower();
+        // double climbDown = controls.getClimberDownPower();
 
-        climber.testMotor(climbUp, climbDown);
+        // climber.testMotor(climbUp, climbDown);
 
-        wheelControl();
+        // wheelControl();
     }
 
     /** This function is called once when the robot is first started up. */
