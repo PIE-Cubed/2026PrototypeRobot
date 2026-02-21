@@ -38,51 +38,51 @@ public class Odometry {
     public static final Vector<N3> CAMERA2_STD_DEVS = VecBuilder.fill(0.125, 0.125, Units.degreesToRadians(1));
 
     // Pose measurements done by hand to obtain camera offsets
-    private final Pose3d CENTER_REF_CAMERA1 = new Pose3d(
-        Units.inchesToMeters(140),
-        Units.inchesToMeters(49.5),
-        0,
-        Rotation3d.kZero
-    );
+    // private final Pose3d CENTER_REF_CAMERA1 = new Pose3d(
+    //     Units.inchesToMeters(140),
+    //     Units.inchesToMeters(49.5),
+    //     0,
+    //     Rotation3d.kZero
+    // );
 
-    private final Pose3d CENTER_REF_CAMERA2 = new Pose3d(
-        Units.inchesToMeters(140),
-        Units.inchesToMeters(55.5),
-        0,
-        new Rotation3d(Rotation2d.kCW_90deg)
-    );
+    // private final Pose3d CENTER_REF_CAMERA2 = new Pose3d(
+    //     Units.inchesToMeters(140),
+    //     Units.inchesToMeters(55.5),
+    //     0,
+    //     new Rotation3d(Rotation2d.kCW_90deg)
+    // );
 
-    private final Pose3d CAMERA1_POSE_SAMPLE = new Pose3d(
-        3.92, // meters
-        1.49, // meters
-        0.124, // meters
-        new Rotation3d(Units.degreesToRadians(-1.0), Units.degreesToRadians(-25.5), Units.degreesToRadians(91.7))
-    );
-    private final Pose3d CAMERA2_POSE_SAMPLE = new Pose3d(
-        3.37, // meters
-        1.70, // meters
-        0.10, // meters
-        new Rotation3d(Units.degreesToRadians(-2.7), Units.degreesToRadians(-29.0), Units.degreesToRadians(92.1))
-    );
+    // private final Pose3d CAMERA1_POSE_SAMPLE = new Pose3d(
+    //     3.92, // meters
+    //     1.49, // meters
+    //     0.124, // meters
+    //     new Rotation3d(Units.degreesToRadians(-1.0), Units.degreesToRadians(-25.5), Units.degreesToRadians(91.7))
+    // );
+    // private final Pose3d CAMERA2_POSE_SAMPLE = new Pose3d(
+    //     3.37, // meters
+    //     1.70, // meters
+    //     0.10, // meters
+    //     new Rotation3d(Units.degreesToRadians(-2.7), Units.degreesToRadians(-29.0), Units.degreesToRadians(92.1))
+    // );
 
     // Distances from bottom center of robot to each camera
     // When rotation is 0 for all axes the Z axis is parallel to the front of the robot.
     // TODO: figure out camera offsets and get multi cam setup working
-    private final Transform3d ROBOT_TO_CAMERA1 = CAMERA1_POSE_SAMPLE.minus(CENTER_REF_CAMERA1);
-    private final Transform3d ROBOT_TO_CAMERA2 = CAMERA2_POSE_SAMPLE.minus(CENTER_REF_CAMERA2);
+    // private final Transform3d ROBOT_TO_CAMERA1 = CAMERA1_POSE_SAMPLE.minus(CENTER_REF_CAMERA1);
+    // private final Transform3d ROBOT_TO_CAMERA2 = CAMERA2_POSE_SAMPLE.minus(CENTER_REF_CAMERA2);
 
-    // private final Transform3d ROBOT_TO_CAMERA1 = new Transform3d(
-    //     Units.inchesToMeters(-9),
-    //     Units.inchesToMeters(13),
-    //     Units.inchesToMeters(-8.5),
-    //     new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-22), Units.degreesToRadians(0))
-    // );
-    // private final Transform3d ROBOT_TO_CAMERA2 = new Transform3d(
-    //     Units.inchesToMeters(-9),
-    //     Units.inchesToMeters(11.5),
-    //     Units.inchesToMeters(8.5),
-    //     new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-29), Units.degreesToRadians(-90))
-    // );
+    private final Transform3d ROBOT_TO_CAMERA1 = new Transform3d(
+        Units.inchesToMeters(8),
+        Units.inchesToMeters(13),
+        Units.inchesToMeters(8.5),
+        new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-29), Units.degreesToRadians(90))
+    );
+    private final Transform3d ROBOT_TO_CAMERA2 = new Transform3d(
+        Units.inchesToMeters(-13),
+        Units.inchesToMeters(-8),
+        Units.inchesToMeters(8.5),
+        new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(-29), Units.degreesToRadians(180))
+    );
     // private final Transform3d ROBOT_TO_CAMERA3 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
     // private final Transform3d ROBOT_TO_CAMERA4 = new Transform3d(0, 0, 0, new Rotation3d(0, 0, 0));
 
